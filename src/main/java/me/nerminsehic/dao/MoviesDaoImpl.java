@@ -8,32 +8,32 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class MovieDaoImpl implements MovieDao {
+public class MoviesDaoImpl implements Movies {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public MovieDaoImpl(JdbcTemplate jdbcTemplate) {
+    public MoviesDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public List<Movie> selectMovies() {
+    public List<Movie> getAll() {
         throw new UnsupportedOperationException("not implemented");
     }
 
     @Override
-    public int insertMovie(Movie movie) {
+    public int persist(Movie movie) {
         throw new UnsupportedOperationException("not implemented");
     }
 
     @Override
-    public int deleteMovie(int id) {
+    public int deleteById(int id) {
         throw new UnsupportedOperationException("not implemented");
 
     }
 
     @Override
-    public Optional<Movie> selectMovieById(int id) {
+    public Optional<Movie> getById(int id) {
         throw new UnsupportedOperationException("not implemented");
     }
     
