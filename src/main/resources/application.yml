@@ -2,7 +2,7 @@ app:
   datasource:
     main:
       driver-class-name: org.postgresql.Driver
-      jdbc-url: jdbc:postgresql://localhost:5432/jdbc-flyway-example
+      jdbc-url: jdbc:postgresql://localhost:5432/nerminsehic
       password: 'password'
       pool-size: 30
       username: nerminsehic
