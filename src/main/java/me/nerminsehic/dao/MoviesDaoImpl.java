@@ -10,10 +10,10 @@ import java.util.Optional;
 @Repository
 public class MoviesDaoImpl implements Movies {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbc;
 
-    public MoviesDaoImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public MoviesDaoImpl(JdbcTemplate jdbc) {
+        this.jdbc = jdbc;
     }
 
     @Override
@@ -23,7 +23,11 @@ public class MoviesDaoImpl implements Movies {
 
     @Override
     public int persist(Movie movie) {
-        throw new UnsupportedOperationException("not implemented");
+        String sql = """
+                INSERT INTO movie(name, release_date)
+                VALUES (?, ?)
+                """;
+        return jdbc.update(sql, movie.name(), movie.releaseDate());
     }
 
     @Override
