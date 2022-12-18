@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class NotFoundException extends RuntimeException {
 
     public NotFoundException(Class<?> entity, Object identifier) {
-        super("A %s could not be found using the following identifier: %s".formatted(entity.getName(), identifier));
+        super("A %s could not be found using the following identifier: %s".formatted(entity.getSimpleName().toLowerCase(), identifier));
     }
 
     public NotFoundException(String message) {
