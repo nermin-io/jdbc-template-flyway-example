@@ -1,4 +1,8 @@
 package me.nerminsehic.entity;
 
-public record Actor(Integer id, String name) {
-}
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record Actor(
+        @JsonProperty("id") Long id,
+        @JsonProperty("name") String name
+) {}
