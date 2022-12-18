@@ -44,7 +44,16 @@ public class MoviesDaoImpl implements Movies {
 
     @Override
     public Optional<Movie> getById(int id) {
-        throw new UnsupportedOperationException("not implemented");
+        String sql = """
+                SELECT id, name, release_date
+                FROM movie
+                WHERE id = ?
+                LIMIT 1;
+                """;
+
+        return jdbc.query(sql, new MovieRowMapper(), id)
+                .stream()
+                .findFirst();
     }
     
 }
