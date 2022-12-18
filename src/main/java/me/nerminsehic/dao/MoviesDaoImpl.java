@@ -38,8 +38,11 @@ public class MoviesDaoImpl implements Movies {
 
     @Override
     public int deleteById(int id) {
-        throw new UnsupportedOperationException("not implemented");
-
+        String sql = """
+                DELETE FROM movie
+                WHERE id = ?
+                """;
+        return jdbc.update(sql, id);
     }
 
     @Override
