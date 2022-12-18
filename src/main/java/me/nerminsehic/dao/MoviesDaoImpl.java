@@ -1,12 +1,13 @@
 package me.nerminsehic.dao;
 
 import me.nerminsehic.entity.Movie;
+import me.nerminsehic.entity.MovieActor;
 import me.nerminsehic.exception.NotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class MoviesDaoImpl implements Movies {
@@ -20,12 +21,27 @@ public class MoviesDaoImpl implements Movies {
     @Override
     public List<Movie> getAll() {
         String sql = """
-                SELECT id, name, release_date
+                SELECT movie.id AS movie_id, movie.name AS movie_name, movie.release_date AS movie_release_date, actor.id AS actor_id, actor.name AS actor_name
                 FROM movie
-                LIMIT 100;
+                LEFT JOIN movie_actor ON movie_actor.movie_id = movie.id
+                FULL JOIN actor ON actor.id = movie_actor.actor_id;
                 """;
 
-        return jdbc.query(sql, new MovieRowMapper());
+        Map<Movie, List<MovieActor>> result = jdbc.query(sql, new MovieActorRowMapper())
+                .stream()
+                .collect(Collectors.groupingBy(MovieActor::movie));
+
+        Set<Movie> movies = result.keySet();
+
+        movies.forEach(movie -> {
+           result.get(movie)
+                   .stream()
+                   .map(MovieActor::actor)
+                   .filter(Objects::nonNull)
+                   .forEach(movie::addActor);
+        });
+
+        return movies.stream().toList();
     }
 
     @Override

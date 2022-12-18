@@ -10,4 +10,8 @@ public record Movie(
         @JsonProperty("name") String name,
         @JsonProperty("actors") List<Actor> actors,
         @JsonProperty("release_date") LocalDate releaseDate
-) {}
+) {
+    public void addActor(Actor actor) {
+        this.actors.add(actor);
+    }
+}
