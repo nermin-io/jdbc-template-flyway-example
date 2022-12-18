@@ -18,7 +18,13 @@ public class MoviesDaoImpl implements Movies {
 
     @Override
     public List<Movie> getAll() {
-        throw new UnsupportedOperationException("not implemented");
+        String sql = """
+                SELECT id, name, release_date
+                FROM movie
+                LIMIT 100;
+                """;
+
+        return jdbc.query(sql, new MovieRowMapper());
     }
 
     @Override
