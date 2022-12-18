@@ -6,7 +6,6 @@ import me.nerminsehic.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MovieService {
@@ -21,26 +20,28 @@ public class MovieService {
         return movies.getAll();
     }
 
-    public void addNewMovie(Movie movie) {
-        // TODO: check if movie exists
-        int result = movies.persist(movie);
-        if (result != 1)
-            throw new IllegalStateException("oops something went wrong");
+    public void createMovie(Movie movie) {
+        boolean persisted = movies.persist(movie);
+        if(!persisted)
+            throw new RuntimeException("Something went wrong. Please try again later.");
     }
 
-    public void deleteMovie(Integer id) {
-        Optional<Movie> movieOptional = movies.getById(id);
-        movieOptional.ifPresentOrElse(movie -> {
-            int result = movies.deleteById(id);
-            if (result != 1)
-                throw new IllegalStateException("oops could not delete movie");
-        }, () -> {
-            throw new NotFoundException(String.format("Movie with id %s not found", id));
-        });
+    public void deleteMovie(long id) {
+        Movie movie = movies.getById(id).orElseThrow(() -> new NotFoundException(Movie.class, id));
+        boolean deleted = movies.deleteById(id);
+        if(!deleted)
+            throw new RuntimeException("Something went wrong. Please try again later.");
     }
 
-    public Movie getMovie(int id) {
+    public Movie getMovie(long id) {
         return movies.getById(id)
                 .orElseThrow(() -> new NotFoundException(Movie.class, id));
+    }
+
+    public Movie updateMovie(long id, Movie movie) {
+        boolean updated = movies.updateMovieById(id, movie);
+        if(updated) return movie;
+
+        throw new RuntimeException("Something went wrong. Please try again later.");
     }
 }

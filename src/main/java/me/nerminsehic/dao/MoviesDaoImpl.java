@@ -1,6 +1,7 @@
 package me.nerminsehic.dao;
 
 import me.nerminsehic.entity.Movie;
+import me.nerminsehic.exception.NotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -28,25 +29,27 @@ public class MoviesDaoImpl implements Movies {
     }
 
     @Override
-    public int persist(Movie movie) {
+    public boolean persist(Movie movie) {
         String sql = """
                 INSERT INTO movie(name, release_date)
                 VALUES (?, ?)
                 """;
-        return jdbc.update(sql, movie.name(), movie.releaseDate());
+        int result = jdbc.update(sql, movie.name(), movie.releaseDate());
+        return result == 1;
     }
 
     @Override
-    public int deleteById(int id) {
+    public boolean deleteById(long id) {
         String sql = """
                 DELETE FROM movie
                 WHERE id = ?
                 """;
-        return jdbc.update(sql, id);
+        int result = jdbc.update(sql, id);
+        return result == 1;
     }
 
     @Override
-    public Optional<Movie> getById(int id) {
+    public Optional<Movie> getById(long id) {
         String sql = """
                 SELECT id, name, release_date
                 FROM movie
@@ -57,6 +60,20 @@ public class MoviesDaoImpl implements Movies {
         return jdbc.query(sql, new MovieRowMapper(), id)
                 .stream()
                 .findFirst();
+    }
+
+    @Override
+    public boolean updateMovieById(long id, Movie newMovie) {
+        Movie movie = getById(id).orElseThrow(() -> new NotFoundException(Movie.class, id));
+        String sql = """
+                UPDATE movie
+                SET name = ?,
+                    release_date = ?
+                WHERE id = ?;
+                """;
+
+        int result = jdbc.update(sql, newMovie.name(), newMovie.releaseDate(), id);
+        return result == 1;
     }
     
 }

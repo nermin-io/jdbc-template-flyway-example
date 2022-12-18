@@ -8,9 +8,11 @@ import java.util.Optional;
 public interface Movies {
     List<Movie> getAll();
 
-    int persist(Movie movie);
+    boolean persist(Movie movie);
 
-    int deleteById(int id);
+    boolean deleteById(long id);
 
-    Optional<Movie> getById(int id);
+    boolean updateMovieById(long id, Movie movie);
+
+    Optional<Movie> getById(long id);
 }
